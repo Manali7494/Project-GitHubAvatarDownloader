@@ -12,12 +12,16 @@ function getRepoContributors(repoOwner, repoName, cb) {
     }
   };
   request(options, function(err, res, body) {
-    cb(err, body);
+    var parsedBody = JSON.parse(body);
+    cb(err, parsedBody);
   });
 }
 
 
-getRepoContributors('lighthouse-labs', 'tweeter', function(err, result){
+getRepoContributors('jquery', 'jquery', function(err, parsedBody){
   console.log("Errors:", err);
-  console.log("Result:", result);
+  var array = parsedBody;
+  array.forEach(function(element, index) {
+    console.log(element["avatar_url"]);
+  });
 });
