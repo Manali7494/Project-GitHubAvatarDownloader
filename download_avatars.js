@@ -42,6 +42,9 @@ if (owner !== "" && name !== ""){
       console.log('Welcome to the Github Avatar Downloader');
       console.log("Errors:", err);
       array.forEach(function(element, index) {
+        if (!fs.existsSync('./avatars')){
+          fs.mkdirSync('./avatars');
+        }
         var filePath = "./avatars/" + element["login"] + ".jpg";
         var url = element["avatar_url"];
         downloadImageByURL(url, filePath);
