@@ -19,5 +19,8 @@
   "homepage": "https://github.com/Manali7494/Project-GitHubAvatarDownloader#readme",
   "dependencies": {
     "request": "^2.85.0"
+  },
+  "devDependencies": {
+    "dotenv": "^5.0.1"
   }
 }
