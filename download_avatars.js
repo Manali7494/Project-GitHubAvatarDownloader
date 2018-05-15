@@ -34,16 +34,18 @@ function downloadImageByURL(url, filePath){
 }
 
 if (owner !== "" && name !== ""){
-  console.log('Welcome to the Github Avatar Downloader');
   getRepoContributors(owner, name, function(err, parsedBody){
-    console.log("Errors:", err);
     var array = parsedBody;
-    array.forEach(function(element, index) {
-      console.log(element);
-      console.log(index);
-      var filePath = "./avatars/" + element["login"] + ".jpg";
-      var url = element["avatar_url"];
-      downloadImageByURL(url, filePath);
-    });
+    if (array.message === 'Not Found') {
+      console.log(errorLogs[1]);
+    } else{
+      console.log('Welcome to the Github Avatar Downloader');
+      console.log("Errors:", err);
+      array.forEach(function(element, index) {
+        var filePath = "./avatars/" + element["login"] + ".jpg";
+        var url = element["avatar_url"];
+        downloadImageByURL(url, filePath);
+      });
+    }
   });
 }
