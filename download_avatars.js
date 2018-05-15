@@ -2,12 +2,14 @@ var request = require('request');
 require('dotenv/config');
 var token = process.env.GITHUB_TOKEN;
 var fs = require('fs');
+var owner = "";
+var name = "";
 var errorLogs = ["Please enter two variables: 1) owner name 2) repo name", "Please enter a valid owner name and repo name"];
 if (process.argv.length > 4 || process.argv.length < 3){
   console.log(errorLogs[0]);
 } else{
-  var owner = process.argv[2];
-  var name = process.argv[3];
+  owner = process.argv[2];
+  name = process.argv[3];
 }
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
@@ -31,7 +33,7 @@ function downloadImageByURL(url, filePath){
     .pipe(fs.createWriteStream(filePath));
 }
 
-if (owner !== undefined && name !== undefined){
+if (owner !== "" && name !== ""){
   console.log('Welcome to the Github Avatar Downloader');
   getRepoContributors(owner, name, function(err, parsedBody){
     console.log("Errors:", err);
