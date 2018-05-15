@@ -4,7 +4,7 @@ var fs = require('fs');
 var owner = process.argv[2];
 var name = process.argv[3];
 
-console.log('Welcome to the Github Avatar Downloader');
+
 
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
@@ -28,13 +28,17 @@ function downloadImageByURL(url, filePath){
     .pipe(fs.createWriteStream(filePath));
 }
 
-getRepoContributors(owner, name, function(err, parsedBody){
-  console.log("Errors:", err);
-  var array = parsedBody;
-  array.forEach(function(element, index) {
-    var filePath = "./avatars/" + element["login"] + ".jpg";
-    var url = element["avatar_url"];
-    downloadImageByURL(url, filePath);
+if (owner !== undefined && name !== undefined){
+  console.log('Welcome to the Github Avatar Downloader');
+  getRepoContributors(owner, name, function(err, parsedBody){
+    console.log("Errors:", err);
+    var array = parsedBody;
+    array.forEach(function(element, index) {
+      var filePath = "./avatars/" + element["login"] + ".jpg";
+      var url = element["avatar_url"];
+      downloadImageByURL(url, filePath);
+    });
   });
-});
-
+} else{
+  console.log('Please enter a valid GitHub owner and repo name');
+}
