@@ -1,16 +1,26 @@
 var request = require('request');
 require('dotenv/config');
-var token = process.env.GITHUB_TOKEN;
 var fs = require('fs');
+var token = process.env.GITHUB_TOKEN;
 var owner = "";
 var name = "";
-var errorLogs = ["Please enter two variables: 1) owner name 2) repo name", "Please enter a valid owner name and repo name"];
+
+// Error Handling: Checking if .env file exists and token added under GITHUB_TOKEN value
+if (!fs.existsSync("./.env")){
+  console.log("Please add .env file in your folder");
+} else if (token === undefined){
+  console.log("Please add your github token in .env file and under 'GITHUB_TOKEN' key ");
+}
+
+// Error Handling: Checks if user added too little or too many arguments
 if (process.argv.length > 4 || process.argv.length < 3){
-  console.log(errorLogs[0]);
+  console.log("Please enter two variables: 1) owner name 2) repo name ");
 } else{
   owner = process.argv[2];
   name = process.argv[3];
 }
+
+// Request to be sent to GitHub API
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
     url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
@@ -25,6 +35,7 @@ function getRepoContributors(repoOwner, repoName, cb) {
   });
 }
 
+// Function for image download
 function downloadImageByURL(url, filePath){
   request.get(url)
     .on('error', function(err){
@@ -33,11 +44,12 @@ function downloadImageByURL(url, filePath){
     .pipe(fs.createWriteStream(filePath));
 }
 
-if (owner !== "" && name !== ""){
+// Function call to download pictures if there are no errors. Also, adds avatar folder if it doesn't already exist.
+if (owner !== "" && name !== "" && token !== undefined){
   getRepoContributors(owner, name, function(err, parsedBody){
     var array = parsedBody;
     if (array.message === 'Not Found') {
-      console.log(errorLogs[1]);
+      console.log("Please enter a valid owner name and repo name");
     } else{
       console.log('Welcome to the Github Avatar Downloader');
       console.log("Errors:", err);
