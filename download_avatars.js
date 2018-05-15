@@ -2,9 +2,13 @@ var request = require('request');
 require('dotenv/config');
 var token = process.env.GITHUB_TOKEN;
 var fs = require('fs');
-var owner = process.argv[2];
-var name = process.argv[3];
-
+var errorLogs = ["Please enter two variables: 1) owner name 2) repo name", "Please enter a valid owner name and repo name"];
+if (process.argv.length > 4 || process.argv.length < 3){
+  console.log(errorLogs[0]);
+} else{
+  var owner = process.argv[2];
+  var name = process.argv[3];
+}
 function getRepoContributors(repoOwner, repoName, cb) {
   var options = {
     url: "https://api.github.com/repos/" + repoOwner + "/" + repoName + "/contributors",
@@ -33,11 +37,11 @@ if (owner !== undefined && name !== undefined){
     console.log("Errors:", err);
     var array = parsedBody;
     array.forEach(function(element, index) {
+      console.log(element);
+      console.log(index);
       var filePath = "./avatars/" + element["login"] + ".jpg";
       var url = element["avatar_url"];
       downloadImageByURL(url, filePath);
     });
   });
-} else{
-  console.log('Please enter a valid GitHub owner and repo name');
 }
